@@ -50,7 +50,7 @@ export default function HomePage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-gray-600">Loading...</div>
+        <div className="text-gray-600">Tunggu bentar ya...</div>
       </div>
     );
   }
@@ -67,7 +67,7 @@ export default function HomePage() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900">
-            Welcome, {currentUser.profile.name}
+            Hi, {currentUser.profile.name}
           </h1>
           <button
             onClick={handleLogout}
@@ -88,15 +88,15 @@ export default function HomePage() {
         {/* User Check-in Section */}
         <div className="bg-white rounded-lg shadow-md p-4">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
-            Your Check-ins Today
+            Gimana Perasaan Kamu Hari Ini?
           </h2>
 
           {/* Morning Check-in */}
           <div className="mb-6">
-            <h3 className="text-md font-medium text-gray-700 mb-3">Morning</h3>
+            <h3 className="text-md font-medium text-gray-700 mb-3">Pagi</h3>
             <CheckInForm
               period="morning"
-              existingCheckIn={!!currentUser.checkIns.morning}
+              existingCheckIn={currentUser.checkIns.morning}
               onSuccess={() => {
                 // Reload page to refresh data
                 window.location.reload();
@@ -106,10 +106,10 @@ export default function HomePage() {
 
           {/* Evening Check-in */}
           <div>
-            <h3 className="text-md font-medium text-gray-700 mb-3">Evening</h3>
+            <h3 className="text-md font-medium text-gray-700 mb-3">Malam</h3>
             <CheckInForm
               period="evening"
-              existingCheckIn={!!currentUser.checkIns.evening}
+              existingCheckIn={currentUser.checkIns.evening}
               onSuccess={() => {
                 // Reload page to refresh data
                 window.location.reload();

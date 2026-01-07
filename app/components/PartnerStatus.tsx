@@ -14,11 +14,11 @@ const moodEmojis: Record<number, string> = {
 };
 
 const moodLabels: Record<number, string> = {
-  1: 'Not Happy',
-  2: 'Somewhat Down',
-  3: 'Neutral',
-  4: 'Pretty Good',
-  5: 'Really Happy',
+  1: 'Sedih Banget',
+  2: 'Agak Sedih',
+  3: 'Biasa Aja',
+  4: 'Sedikit Senang',
+  5: 'Senang Banget',
 };
 
 function CheckInCard({
@@ -32,7 +32,7 @@ function CheckInCard({
     return (
       <div className="bg-gray-50 rounded-md p-4 border border-gray-200">
         <p className="text-sm font-medium text-gray-500 mb-1 capitalize">{period}</p>
-        <p className="text-gray-400 text-sm">Not checked in yet</p>
+        <p className="text-gray-400 text-sm">Belum Isi</p>
       </div>
     );
   }
@@ -69,7 +69,7 @@ export default function PartnerStatus({ partner, checkIns }: PartnerStatusProps)
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold text-gray-800">
-        {partner.name}'s Today
+        Perasaan {partner.name} Hari Ini
       </h2>
 
       <div className="space-y-3">
