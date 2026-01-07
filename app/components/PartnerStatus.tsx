@@ -28,28 +28,46 @@ function CheckInCard({
   period: 'morning' | 'evening';
   checkIn: DailyCheckIns['morning'] | DailyCheckIns['evening'];
 }) {
+  const periodLabel = period === 'morning' ? 'Pagi' : 'Malam';
+  const periodIcon = period === 'morning' ? '🌅' : '🌙';
+  const gradientColors = period === 'morning'
+    ? 'from-amber-50 to-orange-50 border-amber-200'
+    : 'from-indigo-50 to-purple-50 border-indigo-200';
+  const textColor = period === 'morning' ? 'text-amber-700' : 'text-indigo-700';
+
   if (!checkIn) {
     return (
-      <div className="bg-gray-50 rounded-md p-4 border border-gray-200">
-        <p className="text-sm font-medium text-gray-500 mb-1 capitalize">{period}</p>
-        <p className="text-gray-400 text-sm">Belum Isi</p>
+      <div className={`bg-gradient-to-br ${gradientColors} rounded-2xl p-5 border-2 border-dashed opacity-60 hover:opacity-100 transition-opacity`}>
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-xl opacity-50">{periodIcon}</span>
+          <p className={`text-sm font-semibold ${textColor}`}>{periodLabel}</p>
+        </div>
+        <p className="text-gray-400 text-sm flex items-center gap-2">
+          <span className="text-lg">💭</span>
+          Belum ada check-in
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-md p-4 border border-gray-300">
-      <p className="text-sm font-medium text-gray-700 mb-2 capitalize">{period}</p>
-      <div className="flex items-center gap-3 mb-2">
-        <span className="text-4xl">{moodEmojis[checkIn.status_level]}</span>
-        <div>
-          <p className="text-sm text-gray-600">{moodLabels[checkIn.status_level]}</p>
+    <div className={`bg-gradient-to-br ${gradientColors} rounded-2xl p-6 border-2 shadow-md hover:shadow-lg transition-all duration-300`}>
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-xl">{periodIcon}</span>
+        <p className={`text-sm font-semibold ${textColor}`}>{periodLabel}</p>
+      </div>
+      <div className="flex items-center gap-5 mb-3">
+        <span className="text-6xl drop-shadow-lg">{moodEmojis[checkIn.status_level]}</span>
+        <div className="flex-1">
+          <p className="text-lg font-semibold text-gray-800">{moodLabels[checkIn.status_level]}</p>
         </div>
       </div>
       {checkIn.note && (
-        <p className="text-sm text-gray-700 bg-gray-50 rounded p-2 mt-2">
-          "{checkIn.note}"
-        </p>
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 mt-4 border border-white/50 shadow-sm">
+          <p className="text-sm text-gray-700 leading-relaxed italic">
+            "{checkIn.note}"
+          </p>
+        </div>
       )}
     </div>
   );
@@ -58,21 +76,25 @@ function CheckInCard({
 export default function PartnerStatus({ partner, checkIns }: PartnerStatusProps) {
   if (!partner) {
     return (
-      <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
-        <p className="text-yellow-800 text-sm">
-          No partner linked to your account yet.
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center">
+        <div className="text-4xl mb-3 opacity-50">💔</div>
+        <p className="text-gray-600 text-sm font-medium">
+          Belum ada partner yang terhubung
         </p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">
-        Perasaan {partner.name} Hari Ini
-      </h2>
+    <div className="space-y-6">
+      <div className="flex items-center gap-3 pb-2">
+        <div className="text-3xl">💑</div>
+        <h2 className="text-2xl font-bold bg-gradient-to-r from-rose-600 to-purple-600 bg-clip-text text-transparent">
+          {partner.name}
+        </h2>
+      </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         <CheckInCard period="morning" checkIn={checkIns.morning} />
         <CheckInCard period="evening" checkIn={checkIns.evening} />
       </div>

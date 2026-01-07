@@ -109,43 +109,43 @@ export default function CheckInForm({ period, existingCheckIn, onSuccess }: Chec
   // If existing check-in and not editing, show the summary view
   if (existingCheckIn && !isEditing) {
     return (
-      <div className="space-y-3">
-        <div className="bg-green-50 border border-green-200 rounded-md p-4">
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-green-800 font-medium">
-              Yeay! Kamu udah isi {period} session
+      <div className="bg-white/80 backdrop-blur-sm border-2 border-rose-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all">
+        <div className="flex items-center gap-5 mb-3">
+          <span className="text-6xl drop-shadow-lg">{moodEmojis[existingCheckIn.status_level]}</span>
+          <div className="flex-1">
+            <p className="text-lg font-semibold text-gray-800">
+              {moodLabels[existingCheckIn.status_level]}
             </p>
-            <button
-              onClick={() => setIsEditing(true)}
-              className="text-sm text-blue-600 hover:text-blue-700 underline font-medium"
-            >
-              Edit
-            </button>
           </div>
+        </div>
 
-          <div className="flex items-center gap-3 mb-2">
-            <span className="text-4xl">{moodEmojis[existingCheckIn.status_level]}</span>
-            <div>
-              <p className="text-sm text-gray-600">{moodLabels[existingCheckIn.status_level]}</p>
-            </div>
-          </div>
-
-          {existingCheckIn.note && (
-            <p className="text-sm text-gray-700 bg-white rounded p-2 mt-2">
+        {existingCheckIn.note && (
+          <div className="bg-gradient-to-br from-rose-50 to-purple-50 rounded-xl p-4 mt-4 border border-rose-100">
+            <p className="text-sm text-gray-700 leading-relaxed italic">
               "{existingCheckIn.note}"
             </p>
-          )}
-        </div>
+          </div>
+        )}
+
+        <button
+          onClick={() => setIsEditing(true)}
+          className="text-xs text-rose-600 hover:text-rose-700 font-medium mt-4 px-4 py-2 rounded-lg hover:bg-rose-50 transition-colors border border-transparent hover:border-rose-200"
+        >
+          ✏️ ubah
+        </button>
       </div>
     );
   }
 
   // Show the form (for new check-in or editing)
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form
+      onSubmit={handleSubmit}
+      className={`space-y-5 ${isEditing ? 'border-2 border-rose-300 rounded-2xl p-5 bg-white shadow-lg' : ''}`}
+    >
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3 text-center">
-          {isEditing ? `Edit ${period} session` : `Gimana Perasaan Kamu? (${period})`}
+        <label className="block text-sm font-medium text-gray-700 mb-4 text-center">
+          {isEditing ? '✨ Ubah perasaanmu' : '💭 Bagaimana perasaanmu?'}
         </label>
 
         <div className="flex justify-between gap-2">
@@ -154,68 +154,70 @@ export default function CheckInForm({ period, existingCheckIn, onSuccess }: Chec
               key={level}
               type="button"
               onClick={() => setStatusLevel(level)}
-              className={`flex-1 py-4 rounded-lg border-2 transition-all ${
+              className={`flex-1 py-5 rounded-xl border-2 transition-all duration-200 transform ${
                 statusLevel === level
-                  ? 'border-blue-600 bg-blue-50 scale-110'
-                  : 'border-gray-200 bg-white hover:border-gray-300'
+                  ? 'border-rose-500 bg-gradient-to-br from-rose-50 to-pink-50 scale-110 shadow-lg'
+                  : 'border-gray-200 bg-white hover:border-rose-200 hover:scale-105 hover:shadow-md'
               }`}
               title={moodLabels[level]}
             >
-              <div className="text-3xl">{moodEmojis[level]}</div>
+              <div className={`text-4xl transition-transform ${statusLevel === level ? 'animate-bounce' : ''}`}>
+                {moodEmojis[level]}
+              </div>
             </button>
           ))}
         </div>
         {statusLevel && (
-          <p className="text-center text-sm text-gray-600 mt-2">
+          <p className="text-center text-sm font-semibold text-rose-600 mt-4 animate-fade-in">
             {moodLabels[statusLevel]}
           </p>
         )}
       </div>
 
       <div>
-        <label htmlFor={`note-${period}`} className="block text-sm font-medium text-gray-700 mb-1">
-          Apa yang lagi kamu rasain?
+        <label htmlFor={`note-${period}`} className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+          📝 Catatan <span className="text-xs text-gray-400 font-normal">(opsional)</span>
         </label>
         <textarea
           id={`note-${period}`}
           value={note}
           onChange={(e) => setNote(e.target.value)}
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Jelasin perasaan kamu lebih detail..."
+          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent text-sm bg-white shadow-sm transition-all"
+          placeholder="Tulis apa yang kamu rasain..."
           maxLength={500}
         />
       </div>
 
       {error && (
-        <div className="bg-red-50 text-red-700 p-3 rounded-md text-sm">
+        <div className="bg-gradient-to-r from-red-50 to-rose-50 text-red-700 p-4 rounded-xl text-sm border-2 border-red-200 flex items-center gap-2">
+          <span>⚠️</span>
           {error}
         </div>
       )}
 
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         {isEditing && (
           <button
             type="button"
             onClick={() => {
               setIsEditing(false);
-              // Reset to original values
               if (existingCheckIn) {
                 setStatusLevel(existingCheckIn.status_level);
                 setNote(existingCheckIn.note || '');
               }
             }}
-            className="flex-1 bg-gray-200 text-gray-700 py-3 px-4 rounded-md hover:bg-gray-300 font-medium"
+            className="flex-1 bg-white border-2 border-gray-300 text-gray-700 py-3 px-4 rounded-xl hover:bg-gray-50 hover:border-gray-400 text-sm font-semibold transition-all shadow-sm"
           >
-            Batal
+            ❌ Batal
           </button>
         )}
         <button
           type="submit"
           disabled={loading || !statusLevel}
-          className={`${isEditing ? 'flex-1' : 'w-full'} bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium`}
+          className={`${isEditing ? 'flex-1' : 'w-full'} bg-gradient-to-r from-rose-500 to-pink-600 text-white py-3 px-4 rounded-xl hover:from-rose-600 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold shadow-md hover:shadow-lg transition-all transform hover:scale-105 active:scale-95`}
         >
-          {loading ? 'Okay, lagi loading nih...' : isEditing ? 'Update' : `Submit ${period} session`}
+          {loading ? '💾 Menyimpan...' : isEditing ? '✅ Simpan perubahan' : '💝 Simpan'}
         </button>
       </div>
     </form>
