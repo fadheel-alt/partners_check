@@ -1,4 +1,5 @@
 import type { Profile, DailyCheckIns } from '@/types/database';
+import { CoupleHeartIcon } from './icons/RomanticIcons';
 
 interface PartnerStatusProps {
   partner: Profile | null;
@@ -14,11 +15,11 @@ const moodEmojis: Record<number, string> = {
 };
 
 const moodLabels: Record<number, string> = {
-  1: 'Sedih Banget',
-  2: 'Agak Sedih',
-  3: 'Biasa Aja',
-  4: 'Sedikit Senang',
-  5: 'Senang Banget',
+  1: 'Lagi sedih banget',
+  2: 'Agak down',
+  3: 'Biasa aja',
+  4: 'Lumayan seneng',
+  5: 'Seneng banget!',
 };
 
 function CheckInCard({
@@ -28,7 +29,7 @@ function CheckInCard({
   period: 'morning' | 'evening';
   checkIn: DailyCheckIns['morning'] | DailyCheckIns['evening'];
 }) {
-  const periodLabel = period === 'morning' ? 'Pagi' : 'Malam';
+  const periodLabel = period === 'morning' ? 'Pagi hari' : 'Malam hari';
   const periodIcon = period === 'morning' ? '🌅' : '🌙';
   const gradientColors = period === 'morning'
     ? 'from-amber-50 to-orange-50 border-amber-200'
@@ -44,14 +45,14 @@ function CheckInCard({
         </div>
         <p className="text-gray-400 text-sm flex items-center gap-2">
           <span className="text-lg">💭</span>
-          Belum ada check-in
+          Belum cerita nih
         </p>
       </div>
     );
   }
 
   return (
-    <div className={`bg-gradient-to-br ${gradientColors} rounded-2xl p-6 border-2 shadow-md hover:shadow-lg transition-all duration-300`}>
+    <div className={`bg-gradient-to-br ${gradientColors} rounded-2xl p-6 border-2 shadow-md hover:shadow-lg transition-all duration-300 animate-slide-up`}>
       <div className="flex items-center gap-2 mb-4">
         <span className="text-xl">{periodIcon}</span>
         <p className={`text-sm font-semibold ${textColor}`}>{periodLabel}</p>
@@ -79,7 +80,7 @@ export default function PartnerStatus({ partner, checkIns }: PartnerStatusProps)
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center">
         <div className="text-4xl mb-3 opacity-50">💔</div>
         <p className="text-gray-600 text-sm font-medium">
-          Belum ada partner yang terhubung
+          Belum ada pasangan yang terhubung
         </p>
       </div>
     );
@@ -88,7 +89,7 @@ export default function PartnerStatus({ partner, checkIns }: PartnerStatusProps)
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 pb-2">
-        <div className="text-3xl">💑</div>
+        <CoupleHeartIcon size="lg" className="opacity-60" />
         <h2 className="text-2xl font-bold bg-gradient-to-r from-rose-600 to-purple-600 bg-clip-text text-transparent">
           {partner.name}
         </h2>

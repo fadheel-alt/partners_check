@@ -20,11 +20,11 @@ const moodEmojis: Record<StatusLevel, string> = {
 };
 
 const moodLabels: Record<StatusLevel, string> = {
-  1: 'Not Happy',
-  2: 'Somewhat Down',
-  3: 'Neutral',
-  4: 'Pretty Good',
-  5: 'Really Happy',
+  1: 'Lagi nggak oke',
+  2: 'Agak down',
+  3: 'Biasa aja',
+  4: 'Lumayan baik',
+  5: 'Seneng banget!',
 };
 
 export default function CheckInForm({ period, existingCheckIn, onSuccess }: CheckInFormProps) {
@@ -46,7 +46,7 @@ export default function CheckInForm({ period, existingCheckIn, onSuccess }: Chec
     e.preventDefault();
 
     if (!statusLevel) {
-      setError('Pilih Perasaan Kamu Hari Ini dulu ya');
+      setError('Pilih perasaanmu dulu ya');
       return;
     }
 
@@ -145,7 +145,7 @@ export default function CheckInForm({ period, existingCheckIn, onSuccess }: Chec
     >
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-4 text-center">
-          {isEditing ? '✨ Ubah perasaanmu' : '💭 Bagaimana perasaanmu?'}
+          {isEditing ? '✨ Ubah perasaanmu' : '💭 Gimana perasaanmu?'}
         </label>
 
         <div className="flex justify-between gap-2">
@@ -175,8 +175,8 @@ export default function CheckInForm({ period, existingCheckIn, onSuccess }: Chec
       </div>
 
       <div>
-        <label htmlFor={`note-${period}`} className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-          📝 Catatan <span className="text-xs text-gray-400 font-normal">(opsional)</span>
+        <label htmlFor={`note-${period}`} className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+          📝 Ceritain lebih lanjut <span className="text-xs text-gray-400 font-normal">(kalau mau)</span>
         </label>
         <textarea
           id={`note-${period}`}
@@ -184,7 +184,7 @@ export default function CheckInForm({ period, existingCheckIn, onSuccess }: Chec
           onChange={(e) => setNote(e.target.value)}
           rows={3}
           className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent text-sm bg-white shadow-sm transition-all"
-          placeholder="Tulis apa yang kamu rasain..."
+          placeholder="Ceritain dong apa yang kamu rasain..."
           maxLength={500}
         />
       </div>
@@ -209,7 +209,7 @@ export default function CheckInForm({ period, existingCheckIn, onSuccess }: Chec
             }}
             className="flex-1 bg-white border-2 border-gray-300 text-gray-700 py-3 px-4 rounded-xl hover:bg-gray-50 hover:border-gray-400 text-sm font-semibold transition-all shadow-sm"
           >
-            ❌ Batal
+            Gak jadi
           </button>
         )}
         <button
@@ -217,7 +217,7 @@ export default function CheckInForm({ period, existingCheckIn, onSuccess }: Chec
           disabled={loading || !statusLevel}
           className={`${isEditing ? 'flex-1' : 'w-full'} bg-gradient-to-r from-rose-500 to-pink-600 text-white py-3 px-4 rounded-xl hover:from-rose-600 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold shadow-md hover:shadow-lg transition-all transform hover:scale-105 active:scale-95`}
         >
-          {loading ? '💾 Menyimpan...' : isEditing ? '✅ Simpan perubahan' : '💝 Simpan'}
+          {loading ? 'Nyimpen...' : isEditing ? 'Simpan' : '💝 Simpan'}
         </button>
       </div>
     </form>
