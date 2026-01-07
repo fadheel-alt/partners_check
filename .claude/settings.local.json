@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(tree:*)",
-      "Bash(npx create-next-app@latest:*)",
-      "Bash(npm install)"
-    ]
-  }
-}
