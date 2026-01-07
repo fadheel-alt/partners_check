@@ -11,6 +11,14 @@ interface CheckInFormProps {
   onSuccess: () => void;
 }
 
+const moodEmojis: Record<StatusLevel, string> = {
+  1: '😢',
+  2: '😔',
+  3: '😐',
+  4: '🙂',
+  5: '😄',
+};
+
 const moodLabels: Record<StatusLevel, string> = {
   1: 'Not Happy',
   2: 'Somewhat Down',
@@ -83,26 +91,32 @@ export default function CheckInForm({ period, existingCheckIn, onSuccess }: Chec
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+        <label className="block text-sm font-medium text-gray-700 mb-3 text-center">
           How are you feeling? ({period})
         </label>
 
-        <div className="space-y-2">
+        <div className="flex justify-between gap-2">
           {([1, 2, 3, 4, 5] as StatusLevel[]).map((level) => (
             <button
               key={level}
               type="button"
               onClick={() => setStatusLevel(level)}
-              className={`w-full py-3 px-4 rounded-md border-2 text-left transition-colors ${
+              className={`flex-1 py-4 rounded-lg border-2 transition-all ${
                 statusLevel === level
-                  ? 'border-blue-600 bg-blue-50 text-blue-900'
-                  : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                  ? 'border-blue-600 bg-blue-50 scale-110'
+                  : 'border-gray-200 bg-white hover:border-gray-300'
               }`}
+              title={moodLabels[level]}
             >
-              <span className="font-medium">{level}</span> - {moodLabels[level]}
+              <div className="text-3xl">{moodEmojis[level]}</div>
             </button>
           ))}
         </div>
+        {statusLevel && (
+          <p className="text-center text-sm text-gray-600 mt-2">
+            {moodLabels[statusLevel]}
+          </p>
+        )}
       </div>
 
       <div>

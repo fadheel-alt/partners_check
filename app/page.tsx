@@ -8,6 +8,8 @@ import CheckInForm from './components/CheckInForm';
 import PartnerStatus from './components/PartnerStatus';
 import type { TodayStatus } from '@/types/database';
 
+export const dynamic = 'force-dynamic';
+
 export default function HomePage() {
   const [todayStatus, setTodayStatus] = useState<TodayStatus | null>(null);
   const [loading, setLoading] = useState(true);

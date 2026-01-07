@@ -5,6 +5,14 @@ interface PartnerStatusProps {
   checkIns: DailyCheckIns;
 }
 
+const moodEmojis: Record<number, string> = {
+  1: '😢',
+  2: '😔',
+  3: '😐',
+  4: '🙂',
+  5: '😄',
+};
+
 const moodLabels: Record<number, string> = {
   1: 'Not Happy',
   2: 'Somewhat Down',
@@ -32,9 +40,11 @@ function CheckInCard({
   return (
     <div className="bg-white rounded-md p-4 border border-gray-300">
       <p className="text-sm font-medium text-gray-700 mb-2 capitalize">{period}</p>
-      <div className="flex items-center gap-2 mb-2">
-        <span className="text-2xl font-bold text-blue-600">{checkIn.status_level}</span>
-        <span className="text-sm text-gray-600">{moodLabels[checkIn.status_level]}</span>
+      <div className="flex items-center gap-3 mb-2">
+        <span className="text-4xl">{moodEmojis[checkIn.status_level]}</span>
+        <div>
+          <p className="text-sm text-gray-600">{moodLabels[checkIn.status_level]}</p>
+        </div>
       </div>
       {checkIn.note && (
         <p className="text-sm text-gray-700 bg-gray-50 rounded p-2 mt-2">
