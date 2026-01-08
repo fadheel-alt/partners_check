@@ -29,43 +29,43 @@ function CheckInCard({
   period: 'morning' | 'evening';
   checkIn: DailyCheckIns['morning'] | DailyCheckIns['evening'];
 }) {
-  const periodLabel = period === 'morning' ? 'Pagi hari' : 'Malam hari';
+  const periodLabel = period === 'morning' ? 'Pagi' : 'Malam';
   const periodIcon = period === 'morning' ? '🌅' : '🌙';
-  const gradientColors = period === 'morning'
-    ? 'from-amber-50 to-orange-50 border-amber-200'
-    : 'from-indigo-50 to-purple-50 border-indigo-200';
-  const textColor = period === 'morning' ? 'text-amber-700' : 'text-indigo-700';
+  const bgColor = period === 'morning'
+    ? 'bg-amber-50/50'
+    : 'bg-indigo-50/50';
+  const textColor = period === 'morning' ? 'text-amber-600' : 'text-indigo-600';
 
   if (!checkIn) {
     return (
-      <div className={`bg-gradient-to-br ${gradientColors} rounded-2xl p-5 border-2 border-dashed opacity-60 hover:opacity-100 transition-opacity`}>
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-xl opacity-50">{periodIcon}</span>
-          <p className={`text-sm font-semibold ${textColor}`}>{periodLabel}</p>
+      <div className={`${bgColor} rounded-lg p-3 border border-dashed border-gray-200 flex-1`}>
+        <div className="flex items-center gap-1 mb-2">
+          <span className="text-sm opacity-50">{periodIcon}</span>
+          <p className={`text-xs font-medium ${textColor}`}>{periodLabel}</p>
         </div>
-        <p className="text-gray-400 text-sm flex items-center gap-2">
-          <span className="text-lg">💭</span>
-          Belum cerita nih
-        </p>
+        <div className="text-center py-2">
+          <span className="text-2xl opacity-30">💭</span>
+          <p className="text-[10px] text-gray-400 mt-1">Belum cerita</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className={`bg-gradient-to-br ${gradientColors} rounded-2xl p-6 border-2 shadow-md hover:shadow-lg transition-all duration-300 animate-slide-up`}>
-      <div className="flex items-center gap-2 mb-4">
-        <span className="text-xl">{periodIcon}</span>
-        <p className={`text-sm font-semibold ${textColor}`}>{periodLabel}</p>
+    <div className={`${bgColor} rounded-lg p-3 border border-gray-200 flex-1`}>
+      <div className="flex items-center gap-1 mb-2">
+        <span className="text-sm">{periodIcon}</span>
+        <p className={`text-xs font-medium ${textColor}`}>{periodLabel}</p>
       </div>
-      <div className="flex items-center gap-5 mb-3">
-        <span className="text-6xl drop-shadow-lg">{moodEmojis[checkIn.status_level]}</span>
-        <div className="flex-1">
-          <p className="text-lg font-semibold text-gray-800">{moodLabels[checkIn.status_level]}</p>
+      <div className="flex items-center gap-2">
+        <span className="text-3xl">{moodEmojis[checkIn.status_level]}</span>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-medium text-gray-700 truncate">{moodLabels[checkIn.status_level]}</p>
         </div>
       </div>
       {checkIn.note && (
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 mt-4 border border-white/50 shadow-sm">
-          <p className="text-sm text-gray-700 leading-relaxed italic">
+        <div className="mt-2 bg-white/60 rounded-md p-2 border border-white/50">
+          <p className="text-[10px] text-gray-600 leading-snug italic line-clamp-2">
             "{checkIn.note}"
           </p>
         </div>
@@ -77,9 +77,9 @@ function CheckInCard({
 export default function PartnerStatus({ partner, checkIns }: PartnerStatusProps) {
   if (!partner) {
     return (
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center">
-        <div className="text-4xl mb-3 opacity-50">💔</div>
-        <p className="text-gray-600 text-sm font-medium">
+      <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-6 text-center">
+        <div className="text-3xl mb-2 opacity-40">💔</div>
+        <p className="text-gray-500 text-xs font-medium">
           Belum ada pasangan yang terhubung
         </p>
       </div>
@@ -87,15 +87,15 @@ export default function PartnerStatus({ partner, checkIns }: PartnerStatusProps)
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3 pb-2">
-        <CoupleHeartIcon size="lg" className="opacity-60" />
-        <h2 className="text-2xl font-bold bg-gradient-to-r from-rose-600 to-purple-600 bg-clip-text text-transparent">
+    <div className="space-y-3">
+      <div className="flex items-center gap-2">
+        <CoupleHeartIcon size="md" className="opacity-50" />
+        <h2 className="text-lg font-bold bg-gradient-to-r from-rose-500 to-purple-500 bg-clip-text text-transparent">
           {partner.name}
         </h2>
       </div>
 
-      <div className="space-y-4">
+      <div className="flex gap-3">
         <CheckInCard period="morning" checkIn={checkIns.morning} />
         <CheckInCard period="evening" checkIn={checkIns.evening} />
       </div>

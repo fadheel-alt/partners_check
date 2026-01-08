@@ -41,3 +41,21 @@ export interface CheckInFormData {
   status_level: StatusLevel;
   note?: string;
 }
+
+// Week calendar types
+export interface DayCheckIns {
+  date: string; // YYYY-MM-DD
+  morning: CheckIn | null;
+  evening: CheckIn | null;
+}
+
+export interface WeekStatus {
+  user: {
+    profile: Profile;
+    weekCheckIns: DayCheckIns[]; // 7 days
+  };
+  partner: {
+    profile: Profile | null;
+    weekCheckIns: DayCheckIns[]; // 7 days
+  };
+}

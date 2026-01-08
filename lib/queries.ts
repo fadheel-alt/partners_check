@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import type { Profile, CheckIn, DailyCheckIns, TodayStatus } from '@/types/database';
+import type { Profile, CheckIn, DailyCheckIns, TodayStatus, DayCheckIns, WeekStatus } from '@/types/database';
 
 // Get today's date in YYYY-MM-DD format
 export function getTodayDate(): string {
@@ -83,6 +83,84 @@ export async function fetchTodayStatus(): Promise<TodayStatus> {
     partner: {
       profile: partnerProfile,
       checkIns: partnerCheckIns,
+    },
+  };
+}
+
+// Generate array of last 7 dates (YYYY-MM-DD format)
+export function getLast7Dates(): string[] {
+  const dates: string[] = [];
+  const today = new Date();
+
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    dates.push(date.toISOString().split('T')[0]);
+  }
+
+  return dates;
+}
+
+// Fetch check-ins for a date range
+export async function fetchCheckInsForDateRange(
+  userId: string,
+  dates: string[]
+): Promise<DayCheckIns[]> {
+  const { data, error } = await supabase
+    .from('checkins')
+    .select('*')
+    .eq('user_id', userId)
+    .in('checkin_date', dates)
+    .order('checkin_date', { ascending: true });
+
+  if (error) throw error;
+
+  // Organize check-ins by date
+  const dayCheckIns: DayCheckIns[] = dates.map(date => {
+    const morning = data?.find((c) => c.checkin_date === date && c.period === 'morning') || null;
+    const evening = data?.find((c) => c.checkin_date === date && c.period === 'evening') || null;
+
+    return {
+      date,
+      morning,
+      evening,
+    };
+  });
+
+  return dayCheckIns;
+}
+
+// Fetch last 7 days status (user + partner)
+export async function fetchLast7DaysStatus(): Promise<WeekStatus> {
+  const dates = getLast7Dates();
+
+  // Fetch current user profile
+  const userProfile = await fetchCurrentProfile();
+
+  // Fetch user's check-ins for last 7 days
+  const userWeekCheckIns = await fetchCheckInsForDateRange(userProfile.id, dates);
+
+  // Fetch partner profile and check-ins
+  let partnerProfile: Profile | null = null;
+  let partnerWeekCheckIns: DayCheckIns[] = dates.map(date => ({
+    date,
+    morning: null,
+    evening: null,
+  }));
+
+  if (userProfile.partner_id) {
+    partnerProfile = await fetchPartnerProfile(userProfile.partner_id);
+    partnerWeekCheckIns = await fetchCheckInsForDateRange(userProfile.partner_id, dates);
+  }
+
+  return {
+    user: {
+      profile: userProfile,
+      weekCheckIns: userWeekCheckIns,
+    },
+    partner: {
+      profile: partnerProfile,
+      weekCheckIns: partnerWeekCheckIns,
     },
   };
 }

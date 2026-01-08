@@ -3,16 +3,18 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import { fetchTodayStatus } from '@/lib/queries';
+import { fetchTodayStatus, fetchLast7DaysStatus } from '@/lib/queries';
 import CheckInForm from './components/CheckInForm';
 import PartnerStatus from './components/PartnerStatus';
-import type { TodayStatus } from '@/types/database';
+import WeekCalendar from './components/WeekCalendar';
+import type { TodayStatus, WeekStatus } from '@/types/database';
 import { SparkleIcon } from './components/icons/RomanticIcons';
 
 export const dynamic = 'force-dynamic';
 
 export default function HomePage() {
   const [todayStatus, setTodayStatus] = useState<TodayStatus | null>(null);
+  const [weekStatus, setWeekStatus] = useState<WeekStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -27,11 +29,16 @@ export default function HomePage() {
           return;
         }
 
-        // Fetch today's status
-        const status = await fetchTodayStatus();
+        // Fetch today's status and week data in parallel
+        const [status, week] = await Promise.all([
+          fetchTodayStatus(),
+          fetchLast7DaysStatus()
+        ]);
+
         setTodayStatus(status);
+        setWeekStatus(week);
       } catch (error) {
-        console.error('Failed to fetch today status:', error);
+        console.error('Failed to fetch data:', error);
         router.push('/login');
       } finally {
         setLoading(false);
@@ -67,7 +74,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 bg-hearts-pattern px-4 py-8">
-      <div className="max-w-mobile mx-auto space-y-8">
+      <div className="max-w-mobile mx-auto space-y-5">
         {/* Header - Elegant */}
         <div className="flex justify-between items-center bg-white/70 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-rose-100">
           <div className="flex items-center gap-3">
@@ -84,11 +91,25 @@ export default function HomePage() {
           </button>
         </div>
 
-        {/* Partner Status Section - Primary Focus with Heart Theme */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg p-8 border border-rose-100 hover:shadow-xl transition-shadow duration-300 animate-slide-up hover:animate-glow-pulse">
-          <div className="flex items-center gap-2 mb-6">
-            <span className="text-2xl animate-pulse">💕</span>
-            <h2 className="text-sm font-semibold text-rose-600 uppercase tracking-wide">Pasanganmu</h2>
+        {/* 7-Day Calendar */}
+        {weekStatus && (
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-purple-100 animate-slide-up">
+            <h3 className="text-sm font-semibold text-purple-600 mb-3 flex items-center gap-2">
+              <span className="text-base">📅</span>
+              7 Hari Terakhir
+            </h3>
+            <WeekCalendar
+              userWeekData={weekStatus.user}
+              partnerWeekData={weekStatus.partner}
+            />
+          </div>
+        )}
+
+        {/* Partner Status Section - Compact */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm p-5 border border-rose-100 animate-slide-up">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-lg">💕</span>
+            <h2 className="text-xs font-semibold text-rose-600 uppercase tracking-wide">Hari Ini</h2>
           </div>
           <PartnerStatus
             partner={partner.profile}
